@@ -1,0 +1,2 @@
+./klipper_config/config
+./klipper_config/firmware_binaries
