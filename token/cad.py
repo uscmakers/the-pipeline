@@ -1,24 +1,39 @@
 import cadquery as cq
 import math
 
-# Get these from the 3D Model
-T_R = 45 # Radius of the token
-T_H = 9 # Height of the token
-T_EDGE = 8.875 # Edge width of token
+# GET THIS FROM THE 3D MODELS
+LOGO_DEPTH = 2 # Height of the USC logo
+
 
 # SET DESIRED VALUES 
-FONT_DEPTH = 5 # depth of the engraved text
+T_R = 45 # Radius of the token
+T_H = 6 # Height of the flat token (excluding edge)
+EDGE_W= 8 # Edge width of token
+EDGE_H = 3 # Height of the token edge
+
+FONT_DEPTH = 2 # depth of the engraved text
 FONT_SIZE = 5
 
 
-token = cq.importers.importStep("usc.step")
+# BARE TOKEN
+token = cq.Workplane().circle(T_R).extrude(T_H)
 
+# edge
+edge = token.workplane(offset=T_H/2).circle(T_R).extrude(EDGE_H)
+edge = edge.cut(token.workplane(offset=T_H/2).circle(T_R-EDGE_W).extrude(EDGE_H))
+
+# Bare token + edge
+token = token.union(edge)
+
+# USC LOGO
+color2 = (cq.importers.importStep("usclogo.step")
+        .translate((0,0,T_H-LOGO_DEPTH+0.0001))
+        )
 
 s = "Integrity  Honor  Courage  Loyalty  Perseverance  "
 
-
 # Radius
-r = T_R - T_EDGE/2
+r = T_R - EDGE_W/2
 
 # For each character
 for i in range(0, len(s)):
@@ -37,10 +52,16 @@ for i in range(0, len(s)):
         # Engrave character
         text = (cq.Compound
             .makeText(s[i], FONT_SIZE, FONT_DEPTH, font='Sans', fontPath=None, kind='bold', halign='center', valign='center', 
-                    position=cq.Plane(origin=(x_pos, y_pos, T_H - FONT_DEPTH), xDir=(xDir_x, xDir_y, 0.0), normal=(0.0, 0.0, 1.0))
+                    position=cq.Plane(origin=(x_pos, y_pos, T_H + EDGE_H - FONT_DEPTH), xDir=(xDir_x, xDir_y, 0.0), normal=(0.0, 0.0, 1.0))
                     )
         )
-        token = token.cut(text)
+        color2 = color2.union(text)
+        
+        
+# CUT OUT color2 FROM TOKEN
+token = token.cut(color2)
+
 
 # Export
-cq.exporters.export(token, 'token.step')
+cq.exporters.export(token, 'color1.step')
+cq.exporters.export(color2, 'color2.step')
