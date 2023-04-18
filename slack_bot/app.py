@@ -74,45 +74,64 @@ def show_printer_status(client, message, say):
 
     # When a user shares a file triggers the message+file_share event. (https://api.slack.com/events/message/file_share)
 @app.event({'type': 'message', 'subtype': 'file_share'})
-def file_upload_detection(event, say):
-    user_id = event["user"]
-    #file_id = event["files"][0]["id"]
-
-    # File type aimed to be binary, mime_type or media type should be "application/octet-stream"
-    # Maybe add some if else statement in the future so it only responds to g code rather than any file
-    file_type = event["files"][0]["filetype"]
-    mime_type = event["files"][0]["mimetype"]
-
+def file_upload_detection(client, message, event, say):
     file_name = event["files"][0]["name"]
-    text = f"Hello <@{user_id}>! I see you uploaded a file ({file_name}) 👀🎉."
-    say(text)
-    url_private = event["files"][0]["url_private"]
-    text = f"Download link for moonraker purposes?: <{url_private}>"
-    say(text)
+    # Check if the shared file is a G-code file
+    if file_name.endswith(".gcode"):
+        # # Send confirmation message with buttons
+        # say({
+        #     "text": "Do you want to confirm the print interface?",
+        #     "attachments": [
+        #         {
+        #             "text": "",
+        #             "fallback": "You are unable to confirm the print interface.",
+        #             "callback_id": "print_interface",
+        #             "color": "#3AA3E3",
+        #             "attachment_type": "default",
+        #             "actions": [
+        #                 {
+        #                     "name": "confirm",
+        #                     "text": "Yes",
+        #                     "type": "button",
+        #                     "value": "confirm"
+        #                 },
+        #                 {
+        #                     "name": "cancel",
+        #                     "text": "No",
+        #                     "type": "button",
+        #                     "value": "cancel"
+        #                 }
+        #             ]
+        #         }
+        #     ]
+        #})
 
-    # Downloading and saving file from private link to temporary folder
-    say(f"Downloading file and storing into gcode_storage")
-    token = os.environ["SLACK_BOT_TOKEN"]
-    response = requests.get(url_private, headers={'Authorization': 'Bearer %s' % token})
-    #open(f'/home/pi/printer_data/gcodes/pipeline_storage/{file_name}', 'wb').write(response.content)
-    open(f'/home/pi/printer_data/gcodes/{file_name}', 'wb').write(response.content)
-    # Enqueue said file to printer
-    # response = requests.post(f"{moonraker_url}/server/job_queue/job?filenames=pipeline_storage/{file_name}")
-    response = requests.post(f"{moonraker_url}/server/job_queue/job?filenames={file_name}")
-    say(f"Enqueued, current status: \n {response}")
+        user_id = event["user"]
+        #file_id = event["files"][0]["id"]
 
-#"url_private":"https:\/\/files.slack.com\/files-pri\/TRYE87KQB-F04P57VAP9T\/russell_dummy.gcode",
-#"url_private_download":"https:\/\/files.slack.com\/files-pri\/TRYE87KQB-F04P57VAP9T\/download\/russell_dummy.gcode"
-#"permalink":"https:\/\/uscmakers.slack.com\/files\/U031E28HTL1\/F04P57VAP9T\/russell_dummy.gcode"
-#"permalink_public":"https:\/\/slack-files.com\/TRYE87KQB-F04P57VAP9T-5eea892378"
+        # File type aimed to be binary, mime_type or media type should be "application/octet-stream"
+        # Maybe add some if else statement in the future so it only responds to g code rather than any file
+        file_type = event["files"][0]["filetype"]
+        mime_type = event["files"][0]["mimetype"]
 
-# Prints the job queue status
-@app.message("status")
-def call_status(client, message, say):
-    response = requests.get(f"{moonraker_url}/server/job_queue/status")
-    json_data = response.json()
-    say(f"{json_data}")
 
+        file_name = event["files"][0]["name"]
+        text = f"Hello <@{user_id}>! I see you uploaded a gcode file ({file_name}) 👀🎉."
+        say(text)
+        url_private_download = event["files"][0]["url_private_download"]
+        # text = f"Download link for moonraker purposes?: <{url_private_download}>"
+        # say(text)
+        
+        # Downloading and saving file from private link to temporary folder
+        say(f"Downloading file and storing into gcode_storage")
+        token = os.environ["SLACK_BOT_TOKEN"]
+        response = requests.get(url_private_download, headers={'Authorization': 'Bearer %s' % token})
+        #open(f'/home/pi/printer_data/gcodes/pipeline_storage/{file_name}', 'wb').write(response.content)
+        open(f'/home/pi/gcode_files/{file_name}', 'wb').write(response.content)
+        # Enqueue said file to printer
+        # response = requests.post(f"{moonraker_url}/server/job_queue/job?filenames=pipeline_storage/{file_name}")
+        response = requests.post(f"{moonraker_url}/server/job_queue/job?filenames={file_name}")
+        say(f"Enqueued, current status: \n {response}")
 
 @app.message("demo")
 def slack_demo(client, message, say):
