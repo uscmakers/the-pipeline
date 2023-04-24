@@ -16,11 +16,11 @@ with open("Token_Dummies.csv") as csvfile:
         student_dict[row[0]] = convert(row[1:])
 
 # GET THIS FROM THE 3D MODEL
-STEP_DEPTH = 1.5 # Height of the USC logo from STEP file
-STEP_SIZE = 60 # Size of USC logo from STEP file
+LOGO_STEP_DEPTH = 0.8 # Exact height of the USC logo from STEP file
+LOGO_STEP_SIZE = 60 # Size of USC logo from STEP file (may be approximate)
 
-COMP_STEP_DEPTH = 2
-COMP_STEP_SIZE = 69.573
+COMP_STEP_DEPTH = 0.8 # This must be exact
+COMP_STEP_SIZE = 67 # This might not be exact
 
 
 # SET DESIRED VALUES 
@@ -30,13 +30,38 @@ EDGE_W = 10 # Edge width of token
 EDGE_H = 3 # Height of the token edge
 
 LOGO_SIZE = 60
-COMP_SIZE = (2*T_R - 2*EDGE_W) *0.95
+COMP_SIZE = 67
 
-FONT_DEPTH = 1 # depth of the engraved text
+FONT_DEPTH = 0.8 # depth of the engraved text
 BACK_FONT_SIZE = 5
 FONT_SIZE = 7
 OUTER_MAX_CHAR = 64 # this determines the spacing of the characters
 INNER_MAX_CHAR = 48
+
+# ----------- Calculations -----------
+
+final_logo_depth = (LOGO_SIZE/LOGO_STEP_SIZE)*LOGO_STEP_DEPTH
+final_comp_depth = (COMP_SIZE/COMP_STEP_SIZE)*COMP_STEP_DEPTH
+
+print("SCALING LOGO BY", LOGO_SIZE/LOGO_STEP_SIZE)
+print("SCALING COMPASS ROSE BY", COMP_SIZE/COMP_STEP_SIZE)
+
+
+# CHECK THAT NUMBER OF BLACK LAYERS IS EVEN
+combined_logo_compass_height = final_logo_depth + final_comp_depth
+
+if combined_logo_compass_height > T_H:
+    print("Logo and compass layers overlap. Height of black layers is equal to flat token height")
+    print("MAKE SURE # of LAYERS IS EVEN (height is a multiple of 0.4mm):", T_H, "mm")
+else: 
+    print("Logo and compass layers do not overlap")
+    print("\tMAKE SURE # of LOGO LAYERS IS EVEN (height is a multiple of 0.4mm):", final_logo_depth, "mm")
+    print("\tMAKE SURE # of COMPASS LAYERS IS EVEN (height is a multiple of 0.4mm):", final_comp_depth, "mm")
+    print("Flat token height:", T_H, "mm")
+
+print("Black font depth:", FONT_DEPTH, "mm")
+
+# ---------------------------- TOKEN GENERATION ------------------------------- 
 
 # Repeat for all token generation for all student entries
 for key, val in student_dict.items():
