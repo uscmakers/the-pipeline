@@ -20,10 +20,10 @@ def word_len(e):
   return len(e)
 
 # GET THIS FROM THE 3D MODEL
-LOGO_STEP_DEPTH = 0.8 # Exact height of the USC logo from STEP file
+LOGO_STEP_DEPTH = 0.6 # Exact height of the USC logo from STEP file
 LOGO_STEP_SIZE = 60 # Size of USC logo from STEP file (may be approximate)
 
-COMP_STEP_DEPTH = 0.8 # This must be exact
+COMP_STEP_DEPTH = 0.6 # This must be exact
 COMP_STEP_SIZE = 67 # This might not be exact
 
 
@@ -59,8 +59,8 @@ if combined_logo_compass_height > T_H:
     print("MAKE SURE # of LAYERS IS EVEN (height is a multiple of 0.4mm):", T_H, "mm")
 else: 
     print("Logo and compass layers do not overlap")
-    print("\tMAKE SURE # of LOGO LAYERS IS EVEN (height is a multiple of 0.4mm):", final_logo_depth, "mm")
-    print("\tMAKE SURE # of COMPASS LAYERS IS EVEN (height is a multiple of 0.4mm):", final_comp_depth, "mm")
+    print("\tMAKE SURE # of LOGO LAYERS IS ODD:", final_logo_depth, "mm")
+    print("\tMAKE SURE # of COMPASS LAYERS IS ODD:", final_comp_depth, "mm")
     print("Flat token height:", T_H, "mm")
 
 print("Black font depth:", FONT_DEPTH, "mm")
@@ -190,5 +190,5 @@ for key, val in student_dict.items():
     newpath = r'custom_tokens/' + key
     if not os.path.exists(newpath):
         os.makedirs(newpath)
-    cq.exporters.export(token, 'custom_tokens/' + key + '/color1.step')
-    cq.exporters.export(color2, 'custom_tokens/' + key + '/color2.step')
+    cq.exporters.export(token, 'custom_tokens/' + key + '/color1.stl')
+    cq.exporters.export(color2, 'custom_tokens/' + key + '/color2.stl')
