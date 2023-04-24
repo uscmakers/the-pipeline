@@ -3,17 +3,21 @@ import math
 import csv
 import os
 
-def convert(lst):
-    # Clean up empty array entries
-    lst = list(filter(None, lst))
-    return ' '.join(lst)
+# def convert(lst):
+#     # Clean up empty array entries
+#     lst = list(filter(None, lst))
+#     return ' '.join(lst)
 
 student_dict = {}
-with open("Token_Dummies.csv") as csvfile:
+with open("WRIT340_COMPASS.csv") as csvfile:
     reader = csv.reader(csvfile)
     next(reader)
     for row in reader: # each row is a list, skip title
-        student_dict[row[0]] = convert(row[1:])
+        student_dict[row[0]] = row[1:]
+
+# A function that returns the length of the value:
+def word_len(e):
+  return len(e)
 
 # GET THIS FROM THE 3D MODEL
 LOGO_STEP_DEPTH = 0.8 # Exact height of the USC logo from STEP file
@@ -65,6 +69,18 @@ print("Black font depth:", FONT_DEPTH, "mm")
 
 # Repeat for all token generation for all student entries
 for key, val in student_dict.items():
+    val = val[1:]
+    val.sort(reverse=True, key=word_len)
+    outer_words = []
+    outer_words.append(val[0])
+    outer_words.append(val[2])
+    outer_words.append(val[1])
+    outer_words.append(val[3])
+    inner_words = []
+    inner_words.append(val[4])
+    inner_words.append(val[6])
+    inner_words.append(val[5])
+    inner_words.append(val[7])
     # BARE TOKEN (COLOR 1)
     token = cq.Workplane().circle(T_R).extrude(T_H)
 
@@ -78,13 +94,13 @@ for key, val in student_dict.items():
 
     # USC LOGO (COLOR 2)
     logo = (cq.importers.importStep("usclogo.step")
-            .val().scale(LOGO_SIZE/STEP_SIZE)
+            .val().scale(LOGO_SIZE/LOGO_STEP_SIZE)
             )
     color2 = cq.Workplane()
     color2 = color2.union(logo)
 
     # NAME (COLOR 2)
-    name_str = "USC Makers"
+    name_str = key
     text = (cq.Compound
                 .makeText(name_str, BACK_FONT_SIZE, FONT_DEPTH, font='Sans', fontPath=None, kind='bold', halign='center', valign='center', 
                         position=cq.Plane(origin=(0,0,0), xDir=(1,0,0), normal=(0, 0, 1))
@@ -101,11 +117,9 @@ for key, val in student_dict.items():
             )
     color2 = color2.union(compass)
     
-    # CUSTOMIZABLE MORAL VALUES (COLOR 2)
-    s = student_dict[key] + " "
     
-    #---------- OUTER -----------
-    outer_words = ["Integrity", "Honor", "Righteousness", "Loyalty"]
+    # #---------- OUTER -----------
+    # outer_words = ["Integrity", "Honor", "Righteousness", "Loyalty"]
 
     # Radius
     outer_r = T_R - EDGE_W/2
@@ -137,8 +151,8 @@ for key, val in student_dict.items():
                 color2 = color2.union(text)
                 
 
-    #---------- INNER -----------
-    inner_words = ["Courage", "Accountability", "Honesty", "Commitment"]
+    # #---------- INNER -----------
+    # inner_words = ["Courage", "Accountability", "Honesty", "Commitment"]
 
     # Radius
     r = T_R - EDGE_W * 3/2
