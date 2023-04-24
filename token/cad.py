@@ -29,9 +29,9 @@ COMP_STEP_SIZE = 67 # This might not be exact
 
 # SET DESIRED VALUES 
 T_R = 45 # Radius of the token
-T_H = 4 # Height of the flat token (excluding edge)
+T_H = 3.2 # Height of the flat token (excluding edge)
 EDGE_W = 10 # Edge width of token
-EDGE_H = 3 # Height of the token edge
+EDGE_H = 2.4 # Height of the token edge
 
 LOGO_SIZE = 60
 COMP_SIZE = 67
