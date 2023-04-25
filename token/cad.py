@@ -36,7 +36,7 @@ EDGE_H = 2.4 # Height of the token edge
 LOGO_SIZE = 60
 COMP_SIZE = 67
 
-FONT_DEPTH = 0.8 # depth of the engraved text
+FONT_DEPTH = 0.6 # depth of the engraved text
 BACK_FONT_SIZE = 5
 FONT_SIZE = 7
 OUTER_MAX_CHAR = 64 # this determines the spacing of the characters
