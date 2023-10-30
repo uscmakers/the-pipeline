@@ -11,3 +11,8 @@ iface can0 can static
     bitrate 250000
     up ifconfig $IFACE txqueuelen 128
 '''
+
+
+## Cura Setup
+
+Install latest version of Cura. Then copy all resources under `cura-resources` into `C:\Program Files\Ultimakers Cura 5.0.0\share\cura\resources\` or where Cura keeps its config files. If you need further assistance on this step please watch this video on [how to add SOVOL SV04 Printer into Cura 5.0](https://www.youtube.com/watch?v=4KL_7jbV8KM) but use the files from this repo. You should preferably `git clone` this repo to make copying easier since there are many folders and files.
