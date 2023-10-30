@@ -1,0 +1,66 @@
+{
+    "version": 2,
+    "name": "Pipeline - Dual Color",
+    "inherits": "fdmprinter",
+    "metadata":
+    {
+        "visible": true,
+        "author": "Terry Lu <jiatinglu99@gmail.com>",
+        "manufacturer": "USC Makers Pipeline",
+        "file_formats": "text/x-gcode",
+        "platform": "lulzbot_taz_pro_bed.stl",
+        "has_machine_quality": false,
+        "has_variants": false,
+        "machine_extruder_trains":
+        {
+            "0": "pipeline_idex_extruder_0",
+            "1": "pipeline_idex_extruder_1"
+        },
+        "platform_offset": [
+            0,
+            -10,
+            0
+        ],
+        "preferred_material": "polymax_pla",
+        "preferred_quality_type": "normal"
+    },
+    "overrides":
+    {
+        "acceleration_print": { "default_value": 500 },
+        "adhesion_type": { "default_value": "none" },
+        "jerk_print": { "default_value": 12 },
+        "layer_start_x": { "value": 100 },
+        "layer_start_y": { "value": 100 },
+        "machine_acceleration": { "default_value": 500 },
+        "machine_buildplate_type": { "default_value": "aluminum" },
+        "machine_center_is_zero": { "default_value": false },
+        "machine_depth": { "default_value": 280 },
+        "machine_end_gcode": { "default_value": "PIPELINE_END_PRINT" },
+        "machine_extruder_count": { "default_value": 2 },
+        "machine_gcode_flavor": { "default_value": "RepRap (Marlin/Sprinter)" },
+        "machine_heated_bed": { "default_value": true },
+        "machine_height": { "default_value": 250 },
+        "machine_max_acceleration_e": { "default_value": 1000 },
+        "machine_max_acceleration_x": { "default_value": 9000 },
+        "machine_max_acceleration_y": { "default_value": 9000 },
+        "machine_max_acceleration_z": { "default_value": 100 },
+        "machine_name": { "default_value": "Pipeline - Dual Color Mode" },
+        "machine_nozzle_size": { "default_value": 0.5 },
+        "machine_start_gcode": { "default_value": "PIPELINE_START_PRINT" },
+        "machine_width": { "default_value": 280 },
+        "material_diameter": { "default_value": 2.85 },
+        "material_print_temperature":
+        {
+            "default_value": 210,
+            "minimum_value": "0"
+        },
+        "material_print_temperature_layer_0":
+        {
+            "default_value": 210,
+            "minimum_value": "0"
+        },
+        "material_standby_temperature": { "default_value": 200 },
+        "ooze_shield_enabled": { "default_value": true },
+        "switch_extruder_retraction_amount": { "default_value": 8 }
+    }
+}
